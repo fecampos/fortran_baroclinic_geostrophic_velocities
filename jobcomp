@@ -1,0 +1,15 @@
+#!/bin/bash
+
+NETCDFLIB="-L/usr/local/netcdf-fortran/4.4.3/gnu4.8.5/lib64/ -lnetcdff"
+
+NETCDFINC="-I/usr/local/netcdf-fortran/4.4.3/gnu4.8.5/include/"
+
+CPP1="-cpp -O3 -ffpe-trap=zero -mcmodel=medium -traditional -DLinux -openmp"
+
+export OMP_NUM_THREADS=24
+
+gfortran $CPP1 param.f90 gradient.f90 gsw_distance.f90 write_tw_geos.f90 cal_vertical.f90 compute_geos_vel.f90 -o result $NETCDFLIB $NETCDFINC
+
+./result
+
+rm result *.mod
