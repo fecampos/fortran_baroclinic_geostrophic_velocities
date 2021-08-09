@@ -2,7 +2,7 @@
 
       implicit none
 
-      character(len=*),parameter :: file_in = "in.nc"
+      character(len=*),parameter :: file_in = "in02.nc"
      
       character(len=*),parameter :: t_NAME = "time"
       character(len=*),parameter :: x_NAME = "longitude"
@@ -10,7 +10,7 @@
       character(len=*),parameter :: z_NAME = "depth"
       character(len=*),parameter :: rho_NAME = "rhopoto"
 
-      integer, parameter :: nx = 1321, ny = 481, nz = 50, nt = 1
+      integer, parameter :: nx = 241, ny = 241, nz = 50, nt = 1
 
       integer :: i, j, k
 
