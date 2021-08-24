@@ -52,15 +52,8 @@
         f2 = missing_val
       end where
 
-      !where ((f1.gt.0.1).or.(f1.lt.-0.1))
-      !  f1 = missing_val
-      !end where
-
-      !where ((f2.gt.0.1).or.(f2.lt.-0.1))
-      !  f2 = missing_val
-      !end where
-
       call cal_vertical(nx,ny,nz,Z,missing_val,f1,ugeos)
+      
       call cal_vertical(nx,ny,nz,Z,missing_val,f2,vgeos)
 
       call write_tw_geos(nx,ny,nz,nt,X,Y,Z, &
