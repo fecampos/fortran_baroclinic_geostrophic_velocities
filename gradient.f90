@@ -14,49 +14,75 @@
 
       g = f
 
-      where(f.eq.missing_val)
-        g = 0
-      end where
-
       !OMP PARALLEL DO
       do i = 2,nx-1
         do j = 1,ny
-          call gsw_distance(lon(i+1),lon(i-1),lat(j),lat(j),dx)
-          gx(i,j) = (g(i+1,j)-g(i-1,j))/dx        
+          if ((g(i+1,j).ne.missing_val).and.(g(i-1,j).ne.missing_val)) then
+            call gsw_distance(lon(i+1),lon(i-1),lat(j),lat(j),dx)
+            gx(i,j) = (g(i+1,j)-g(i-1,j))/dx        
+          else 
+            gx(i,j) = missing_val
+          end if
         end do
       end do
       !OMP END PARALLEL DO
  
       !OMP PARALLEL DO
       do j = 1,ny
-        call gsw_distance(lon(2),lon(1),lat(j),lat(j),dx)
-        gx(1,j) = (g(2,j)-g(1,j))/dx
-        call gsw_distance(lon(nx),lon(nx-1),lat(j),lat(j),dx)
-        gx(nx,j) = (g(nx,j)-g(nx-1,j))/dx
+        if ((g(2,j).ne.missing_val).and.(g(1,j).ne.missing_val)) then
+          call gsw_distance(lon(2),lon(1),lat(j),lat(j),dx)
+          gx(1,j) = (g(2,j)-g(1,j))/dx
+        else
+          gx(1,j) = missing_val
+        end if
       end do
       !OMP END PARALLEL DO
+
+      !OMP PARALLEL DO
+      do j = 1,ny
+        if ((g(nx,j).ne.missing_val).and.(g(nx-1,j).ne.missing_val)) then
+          call gsw_distance(lon(nx),lon(nx-1),lat(j),lat(j),dx)
+          gx(nx,j) = (g(nx,j)-g(nx-1,j))/dx
+        else
+          gx(nx,j) = missing_val
+        end if
+      end do
+      !OMP END PARALLEL DO
+
 
       !OMP PARALLEL DO
       do i = 1,nx
         do j = 2,ny-1
-          call gsw_distance(lon(i),lon(i),lat(j+1),lat(j-1),dy)
-          gy(i,j) = (g(i,j+1)-g(i,j-1))/dy
-        end do
+          if ((g(i,j+1).ne.missing_val).and.(g(i,j-1).ne.missing_val)) then
+            call gsw_distance(lon(i),lon(i),lat(j+1),lat(j-1),dy)
+            gy(i,j) = (g(i,j+1)-g(i,j-1))/dy
+          else
+            gy(i,j) = missing_val
+          end if
+        end do      
       end do
       !OMP END PARALLEL DO
 
       !OMP PARALLEL DO
       do i = 1,nx
-        call gsw_distance(lon(i),lon(i),lat(2),lat(1),dy)
-        gy(i,1) = (g(i,2)-g(i,1))/dy
-        call gsw_distance(lon(i),lon(i),lat(ny),lat(ny-1),dy)
-        gy(i,ny) = (g(i,ny)-g(i,ny-1))/dy
+        if ((g(i,2).ne.missing_val).and.(g(i,1).ne.missing_val)) then
+          call gsw_distance(lon(i),lon(i),lat(2),lat(1),dy)
+          gy(i,1) = (g(i,2)-g(i,1))/dy
+        else
+          gy(i,1) = missing_val
+        end if
       end do
       !OMP END PARALLEL DO
 
-      where(f.eq.missing_val)
-        gx = missing_val
-        gy = missing_val
-      end where
+      !OMP PARALLEL DO
+      do i = 1,nx
+        if ((g(i,ny).ne.missing_val).and.(g(i,ny-1).ne.missing_val)) then
+          call gsw_distance(lon(i),lon(i),lat(nx),lat(nx-1),dy)
+          gy(i,ny) = (g(i,ny)-g(i,ny-1))/dy
+        else
+          gy(i,ny) = missing_val
+        end if
+      end do
+      !OMP END PARALLEL DO
 
       end subroutine
