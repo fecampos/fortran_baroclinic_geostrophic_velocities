@@ -46,7 +46,7 @@
 
       !OMP PARALLEL DO
       do k = nz-1,1,-1
-        g(:,:,k) = g(:,:,k+1)-f0(:,:,k)
+        g(:,:,k) = g(:,:,k+1)+f0(:,:,k)
       end do
       !OMP END PARALLEL DO 
 
